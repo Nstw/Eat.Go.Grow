@@ -14,26 +14,44 @@ class Player:
         self.world = world
         self.x = x
         self.y = y
-        self.status_move_bear = 0
-        self.status_move_pig = 0
-        
-    def update(self, delta): 
-        if self.status_move_bear == DIR_UP:
-            self.y += MOVE_SPEED
-        elif self.status_move_bear == DIR_DOWN:
-            self.y -= MOVE_SPEED
-        elif self.status_move_bear == DIR_RIGHT:
-            self.x += MOVE_SPEED
-        elif self.status_move_bear == DIR_LEFT:
-            self.x -= MOVE_SPEED
+        self.status_move = 0
 
-        if self.status_move_pig == DIR_UP:
+class Bear(Player):
+    def __init__(self, world, x, y):
+        super().__init__(world, x, y)
+
+    def update(self, delta): 
+        if self.status_move == DIR_UP:
             self.y += MOVE_SPEED
-        elif self.status_move_pig == DIR_DOWN:
+        elif self.status_move == DIR_DOWN:
             self.y -= MOVE_SPEED
-        elif self.status_move_pig == DIR_RIGHT:
+        elif self.status_move == DIR_RIGHT:
             self.x += MOVE_SPEED
-        elif self.status_move_pig == DIR_LEFT:
+        elif self.status_move == DIR_LEFT:
+            self.x -= MOVE_SPEED
+        
+        if self.x > self.world.width:
+            self.x = 0
+        elif self.x < 0:
+            self.x = self.world.width
+        
+        if self.y > self.world.height:
+            self.y = 0        
+        elif self.y < 0:
+            self.y = self.world.height
+
+class Pig(Player):
+    def __init__(self, world, x, y):
+        super().__init__(world, x, y)
+
+    def update(self, delta):
+        if self.status_move == DIR_UP:
+            self.y += MOVE_SPEED
+        elif self.status_move == DIR_DOWN:
+            self.y -= MOVE_SPEED
+        elif self.status_move == DIR_RIGHT:
+            self.x += MOVE_SPEED
+        elif self.status_move == DIR_LEFT:
             self.x -= MOVE_SPEED
 
         if self.x > self.world.width:
@@ -45,22 +63,14 @@ class Player:
             self.y = 0        
         elif self.y < 0:
             self.y = self.world.height
-'''
-class Bear(Player):
-    def __init__(self, world, x, y):
-        super().__init__(world, x, y)
 
-class Pig(Player):
-    def __init__(self, world, x, y):
-        super().__init__(world, x, y)
-'''
 class World:
     def __init__(self, width, height):
         self.width = width
         self.height = height
 
-        self.bear = Player(self, 200, 350)
-        self.pig = Player(self, 1000, 350)
+        self.bear = Bear(self, 200, 350)
+        self.pig = Pig(self, 1000, 350)
 
     def update(self, delta):
         self.bear.update(delta)
@@ -68,27 +78,27 @@ class World:
 
     def on_key_press(self, key, key_modifiers):
         if (key == arcade.key.UP):            
-            self.pig.status_move_pig = DIR_UP
+            self.pig.status_move = DIR_UP
         elif (key == arcade.key.DOWN):            
-            self.pig.status_move_pig = DIR_DOWN
+            self.pig.status_move = DIR_DOWN
         elif (key == arcade.key.LEFT):            
-            self.pig.status_move_pig = DIR_LEFT
+            self.pig.status_move = DIR_LEFT
         elif (key == arcade.key.RIGHT):            
-            self.pig.status_move_pig = DIR_RIGHT
+            self.pig.status_move = DIR_RIGHT
 
         if (key == arcade.key.W):
-            self.bear.status_move_bear = DIR_UP
+            self.bear.status_move = DIR_UP
         elif (key == arcade.key.S):
-            self.bear.status_move_bear = DIR_DOWN
+            self.bear.status_move = DIR_DOWN
         elif (key == arcade.key.A):
-            self.bear.status_move_bear = DIR_LEFT
+            self.bear.status_move = DIR_LEFT
         elif (key == arcade.key.D):
-            self.bear.status_move_bear = DIR_RIGHT
+            self.bear.status_move = DIR_RIGHT
 
     def on_key_release(self, key, key_modifiers):
         if (key == arcade.key.UP or key == arcade.key.DOWN or
             key == arcade.key.LEFT or key == arcade.key.RIGHT):
-            self.pig.status_move_pig = 0
+            self.pig.status_move = 0
         elif (key == arcade.key.W or key == arcade.key.S or
             key == arcade.key.A or key == arcade.key.D):
-            self.bear.status_move_bear = 0
+            self.bear.status_move = 0
