@@ -18,7 +18,7 @@ class ModelSprite(arcade.Sprite):
         self.sync_with_model()
         super().draw()
 
-class BearPigWindow(arcade.Window):
+class PlayerWindow(arcade.Window):
     def __init__(self, width, height):
         super().__init__(width, height)
 
@@ -28,9 +28,11 @@ class BearPigWindow(arcade.Window):
 
         self.bear_sprite = ModelSprite('images/bear2.png', model = self.world.bear)
         #self.bear_sprite.set_position(0,0)
-
         self.pig_sprite = ModelSprite('images/pig1.png', model = self.world.pig)
         #self.pig_sprite.set_position(0,0)
+
+    def update(self, delta):
+        self.world.update(delta)
 
     def on_draw(self):
         arcade.start_render()
@@ -38,8 +40,14 @@ class BearPigWindow(arcade.Window):
         self.bear_sprite.draw()
         self.pig_sprite.draw()
 
+    def on_key_press(self, key, key_modifiers):
+        self.world.on_key_press(key, key_modifiers)
+    
+    def on_key_release(self, key, key_modifiers):
+        self.world.on_key_release(key, key_modifiers)
+
 def main():
-    window = BearPigWindow(SCREEN_WIDTH, SCREEN_HEIGHT)
+    window = PlayerWindow(SCREEN_WIDTH, SCREEN_HEIGHT)
     arcade.set_window(window)
     arcade.run()
 
