@@ -27,12 +27,16 @@ class BearPigWindow(arcade.Window):
         self.world = World(SCREEN_WIDTH, SCREEN_HEIGHT)
 
         self.bear_sprite = ModelSprite('images/bear2.png', model = self.world.bear)
-        self.bear_sprite.set_position(300,500)
+        #self.bear_sprite.set_position(0,0)
+
+        self.pig_sprite = ModelSprite('images/pig1.png', model = self.world.pig)
+        #self.pig_sprite.set_position(0,0)
 
     def on_draw(self):
         arcade.start_render()
-
+        
         self.bear_sprite.draw()
+        self.pig_sprite.draw()
 
 def main():
     window = BearPigWindow(SCREEN_WIDTH, SCREEN_HEIGHT)
