@@ -1,4 +1,5 @@
 import arcade.key
+from random import randint
 from genfood import Food
 
 DIR_UP = 1
@@ -75,27 +76,21 @@ class World:
 
         self.bear = Bear(self, 200, 350)
         self.pig = Pig(self, 1000, 350)
-        #self.grapes = Food(self, 300, 200)
 
-        #self.food = Food(self, 100, 100)
         self.food_list = arcade.SpriteList()
-        self.food_list = Food().food_list
-
-        #self.food_list.append(self.grapes)
-
-        #self.collision_list = arcade.geometry.check_for_collision(self.grapes, self.bear)
+        self.sweets = ["grapes", "banana", "carrot", "salad", "donut", "hamburguer", "ice-cream"] #list of food
+        random_sweets = randint(0, len(self.sweets)-1)
+        food = Food("images/" + self.sweets[random_sweets] + ".png", 1)
+        food.setup(self.width, self.height)
+        self.food_list.append(food)
 
     def update(self, delta):
         self.bear.update(delta)
         self.pig.update(delta)
+
         for x in self.food_list:
-            if self.bear.hit(x, 10):
+            if self.bear.hit(x, 20) or self.pig.hit(x, 20):
                 x.kill()
-
-
-    #def checkCollide(self):
-    #    if (self.collision_list == TRUE):
-    #        self.food_list.remove(grapes)
 
     def on_key_press(self, key, key_modifiers):
         if (key == arcade.key.UP):            

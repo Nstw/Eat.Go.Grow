@@ -22,7 +22,7 @@ class PlayerWindow(arcade.Window):
     def __init__(self, width, height):
         super().__init__(width, height)
 
-        arcade.set_background_color(arcade.color.WHITE)
+        arcade.set_background_color(arcade.color.AMARANTH_PURPLE)
 
         self.world = World(SCREEN_WIDTH, SCREEN_HEIGHT)
 
@@ -30,9 +30,7 @@ class PlayerWindow(arcade.Window):
         self.bear_sprite.set_position(0,0)
         self.pig_sprite = ModelSprite('images/pig1.png', model = self.world.pig)
         self.pig_sprite.set_position(0,0)
-        #self.grapes_sprite = ModelSprite('images/grapes.png', model = self.world.grapes)
-        #self.grapes_sprite.set_position(0,0)
-        self.food = self.world.food_list
+        self.food = self.world.food_list     
 
     def update(self, delta):
         self.world.update(delta)
@@ -40,13 +38,9 @@ class PlayerWindow(arcade.Window):
     def on_draw(self):
         arcade.start_render()
 
-        #self.grapes_sprite.draw()
         self.food.draw()      
         self.bear_sprite.draw()
         self.pig_sprite.draw()
-
-    #def checkCollide(self):
-    #   self.world.checkCollide(self)
 
     def on_key_press(self, key, key_modifiers):
         self.world.on_key_press(key, key_modifiers)
