@@ -27,18 +27,26 @@ class PlayerWindow(arcade.Window):
         self.world = World(SCREEN_WIDTH, SCREEN_HEIGHT)
 
         self.bear_sprite = ModelSprite('images/bear2.png', model = self.world.bear)
-        #self.bear_sprite.set_position(0,0)
+        self.bear_sprite.set_position(0,0)
         self.pig_sprite = ModelSprite('images/pig1.png', model = self.world.pig)
-        #self.pig_sprite.set_position(0,0)
+        self.pig_sprite.set_position(0,0)
+        #self.grapes_sprite = ModelSprite('images/grapes.png', model = self.world.grapes)
+        #self.grapes_sprite.set_position(0,0)
+        self.food = self.world.food_list
 
     def update(self, delta):
         self.world.update(delta)
 
     def on_draw(self):
         arcade.start_render()
-        
+
+        #self.grapes_sprite.draw()
+        self.food.draw()      
         self.bear_sprite.draw()
         self.pig_sprite.draw()
+
+    #def checkCollide(self):
+    #   self.world.checkCollide(self)
 
     def on_key_press(self, key, key_modifiers):
         self.world.on_key_press(key, key_modifiers)

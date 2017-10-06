@@ -1,4 +1,5 @@
 import arcade.key
+from genfood import Food
 
 DIR_UP = 1
 DIR_DOWN = 2
@@ -15,6 +16,9 @@ class Player:
         self.x = x
         self.y = y
         self.status_move = 0
+    
+    def hit(self, other, hit_size):
+        return (abs(self.x-other.center_x)<=hit_size) and (abs(self.y-other.center_y)<=hit_size)
 
 class Bear(Player):
     def __init__(self, world, x, y):
@@ -71,10 +75,27 @@ class World:
 
         self.bear = Bear(self, 200, 350)
         self.pig = Pig(self, 1000, 350)
+        #self.grapes = Food(self, 300, 200)
+
+        #self.food = Food(self, 100, 100)
+        self.food_list = arcade.SpriteList()
+        self.food_list = Food().food_list
+
+        #self.food_list.append(self.grapes)
+
+        #self.collision_list = arcade.geometry.check_for_collision(self.grapes, self.bear)
 
     def update(self, delta):
         self.bear.update(delta)
         self.pig.update(delta)
+        for x in self.food_list:
+            if self.bear.hit(x, 10):
+                x.kill()
+
+
+    #def checkCollide(self):
+    #    if (self.collision_list == TRUE):
+    #        self.food_list.remove(grapes)
 
     def on_key_press(self, key, key_modifiers):
         if (key == arcade.key.UP):            
