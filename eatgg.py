@@ -13,6 +13,11 @@ class ModelSprite(arcade.Sprite):
     def sync_with_model(self):
         if self.model:
             self.set_position(self.model.x, self.model.y)
+            self.set_scale(self.model.scale)
+
+    def set_scale(self, scale):
+        self.width = self.texture.width * scale
+        self.height = self.texture.height * scale
 
     def draw(self):
         self.sync_with_model()
