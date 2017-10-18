@@ -28,20 +28,21 @@ class PlayerWindow(arcade.Window):
         super().__init__(width, height)
 
         arcade.set_background_color(arcade.color.AMARANTH_PURPLE)
-
         self.world = World(SCREEN_WIDTH, SCREEN_HEIGHT)
+        self.background = arcade.load_texture("images/bg10.png")
 
-        self.bear_sprite = ModelSprite('images/bear2.png', model = self.world.bear)
-        self.bear_sprite.set_position(0,0)
-        self.pig_sprite = ModelSprite('images/pig1.png', model = self.world.pig)
-        self.pig_sprite.set_position(0,0)
-        self.food = self.world.food_list     
+        self.bear_sprite = ModelSprite('images/bear3.png', model = self.world.bear)
+        self.pig_sprite = ModelSprite('images/pig3.png', model = self.world.pig)
+        self.food = self.world.food_list   
 
     def update(self, delta):
         self.world.update(delta)
 
     def on_draw(self):
         arcade.start_render()
+
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
+                                      SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
 
         self.food.draw()      
         self.bear_sprite.draw()
