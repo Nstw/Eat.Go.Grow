@@ -29,11 +29,13 @@ class PlayerWindow(arcade.Window):
 
         arcade.set_background_color(arcade.color.AMARANTH_PURPLE)
         self.world = World(SCREEN_WIDTH, SCREEN_HEIGHT)
-        self.background = arcade.load_texture("images/bg10.png")
+        self.background = arcade.load_texture("images/bg12.png")
 
         self.bear_sprite = ModelSprite('images/bear3.png', model = self.world.bear)
         self.pig_sprite = ModelSprite('images/pig3.png', model = self.world.pig)
         self.food = self.world.food_list   
+
+        self.gifts = self.world.gift
 
     def update(self, delta):
         self.world.update(delta)
@@ -44,9 +46,18 @@ class PlayerWindow(arcade.Window):
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
                                       SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
 
-        self.food.draw()      
-        self.bear_sprite.draw()
-        self.pig_sprite.draw()
+        self.gifts.draw()
+
+        self.food.draw()    
+        if not(self.world.pig.win):  
+            self.bear_sprite.draw()
+        if not(self.world.bear.win):
+            self.pig_sprite.draw()
+
+        #self.end_game()        
+
+    #def end_game(self):
+    #    arcade.draw_text("bear wins", self.width-30, self.height-30, arcade.color.BLACK, 400)
 
     def on_key_press(self, key, key_modifiers):
         self.world.on_key_press(key, key_modifiers)

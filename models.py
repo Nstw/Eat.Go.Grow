@@ -1,8 +1,7 @@
+import arcade
 import arcade.key
 from random import randint
 from genfood import Food
-
-MOVE_SPEED = 9
 
 class Player:    
     def __init__(self, world, x, y):
@@ -12,6 +11,8 @@ class Player:
         self.MOVE_X = 0
         self.MOVE_Y = 0
         self.scale = 0.2
+        self.Move_Speed = 5
+        self.win = False
 
     def update(self, delta):
         self.x += self.MOVE_X
@@ -27,53 +28,93 @@ class Player:
         elif self.y < 0:
             self.y = self.world.height
     
+        for x in self.world.food_list:
+            if self.hit(x, 20+(20*self.scale)): 
+                x.center_x = randint(0, self.world.width-1)
+                x.center_y = randint(0, self.world.height-1)
+                self.scale += 0.05
+        self.world.check_gift = False
+        if self.hit(self.world.gift, 10+(10*self.scale)):
+            self.Move_Speed += self.Move_Speed*0.025
+            self.world.check_gift = True
+
     def hit(self, other, hit_size):
         return (abs(self.x-other.center_x)<=hit_size) and (abs(self.y-other.center_y)<=hit_size)
+
+    def hit_player(self, other, hit_size):
+        return (abs(self.x-other.x)<=hit_size) and (abs(self.y-other.y)<=hit_size)
 
 class World:
     def __init__(self, width, height):
         self.width = width
         self.height = height
 
-        self.bear = Player(self, 200, 350)
-        self.pig = Player(self, 1000, 350)
-
         self.food_list = arcade.SpriteList()
         self.food_list = Food().food_list
 
-    def update(self, delta):
-        self.bear.update(delta)
-        self.pig.update(delta)
+        self.gift = arcade.Sprite()
+        self.gift = Food().gift
 
+        self.bear = Player(self, 200, 350)
+        self.pig = Player(self, 1000, 350)
+
+        self.check_gift = False
+
+    def update(self, delta):
+        if not(self.pig.win):
+            self.bear.update(delta)
+        if not(self.bear.win):
+            self.pig.update(delta)
+        '''
         for x in self.food_list:
             if self.bear.hit(x, 20+(20*self.bear.scale)): 
                 x.center_x = randint(0, self.width-1)
                 x.center_y = randint(0, self.height-1)
-                self.bear.scale += 0.1
-                
+                self.bear.scale += 0.05
+
             elif self.pig.hit(x, 20+(20*self.pig.scale)):
                 x.center_x = randint(0, self.width-1)
                 x.center_y = randint(0, self.height-1)
-                self.pig.scale += 0.1
+                self.pig.scale += 0.05
+        '''
+        if self.bear.hit_player(self.pig, 15+(15*self.pig.scale)):
+            if (self.bear.scale > self.pig.scale):
+                self.bear.win = True
+            elif (self.pig.scale > self.bear.scale):
+                self.pig.win = True
 
+                #arcade.draw_text("bear wins", self.width-30, self.height-30, arcade.color.BLACK, 400)
+        '''
+        check_gift = False
+        if self.bear.hit(self.gift, 10+(10*self.bear.scale)):
+            self.bear.Move_Speed += self.bear.Move_Speed*0.025
+            check_gift = True
+        elif self.pig.hit(self.gift, 10+(10*self.pig.scale)):
+            self.pig.Move_Speed += self.pig.Move_Speed*0.025
+            check_gift = True
+        '''
+        if self.check_gift :
+            self.gift.center_x  = randint(0,self.width-10)
+            self.check_gift = False
+            
     def on_key_press(self, key, key_modifiers):
         if (key == arcade.key.UP):            
-            self.pig.MOVE_Y = MOVE_SPEED
+            self.pig.MOVE_Y = self.pig.Move_Speed
         elif (key == arcade.key.DOWN):            
-            self.pig.MOVE_Y = MOVE_SPEED*-1
+            self.pig.MOVE_Y = self.pig.Move_Speed*-1
         elif (key == arcade.key.LEFT):            
-            self.pig.MOVE_X = MOVE_SPEED*-1
+            self.pig.MOVE_X = self.pig.Move_Speed*-1
         elif (key == arcade.key.RIGHT):            
-            self.pig.MOVE_X = MOVE_SPEED
+            self.pig.MOVE_X = self.pig.Move_Speed
 
         if (key == arcade.key.W):
-            self.bear.MOVE_Y = MOVE_SPEED
+            self.bear.MOVE_Y = self.bear.Move_Speed
         elif (key == arcade.key.S):
-            self.bear.MOVE_Y = MOVE_SPEED*-1
+            self.bear.MOVE_Y = self.bear.Move_Speed*-1
         elif (key == arcade.key.A):
-            self.bear.MOVE_X = MOVE_SPEED*-1
+            self.bear.MOVE_X = self.bear.Move_Speed*-1
         elif (key == arcade.key.D):
-            self.bear.MOVE_X = MOVE_SPEED
+            self.bear.MOVE_X = self.bear.Move_Speed
 
     def on_key_release(self, key, key_modifiers):
         if (key == arcade.key.UP or key == arcade.key.DOWN):
