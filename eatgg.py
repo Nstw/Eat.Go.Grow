@@ -34,30 +34,28 @@ class PlayerWindow(arcade.Window):
         self.bear_sprite = ModelSprite('images/bear3.png', model = self.world.bear)
         self.pig_sprite = ModelSprite('images/pig3.png', model = self.world.pig)
         self.food = self.world.food_list   
-
         self.gifts = self.world.gift
 
     def update(self, delta):
-        self.world.update(delta)
+        if not(self.world.pig.win or self.world.bear.win):
+            self.world.update(delta)
 
     def on_draw(self):
         arcade.start_render()
-
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
                                       SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
-
         self.gifts.draw()
-
         self.food.draw()    
-        if not(self.world.pig.win):  
-            self.bear_sprite.draw()
-        if not(self.world.bear.win):
-            self.pig_sprite.draw()
-
-        #self.end_game()        
-
-    #def end_game(self):
-    #    arcade.draw_text("bear wins", self.width-30, self.height-30, arcade.color.BLACK, 400)
+        
+        if not(self.world.pig.win):    #pig wins
+            self.bear_sprite.draw()  
+        if not(self.world.bear.win):   #bear wins
+            self.pig_sprite.draw()     
+        
+        if self.world.pig.win:
+            arcade.draw_text("Pig wins", 350, 300, arcade.color.BLACK, 120)
+        elif self.world.bear.win:
+            arcade.draw_text("Bear wins", 300, 300, arcade.color.BLACK, 120)
 
     def on_key_press(self, key, key_modifiers):
         self.world.on_key_press(key, key_modifiers)
