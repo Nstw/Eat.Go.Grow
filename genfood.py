@@ -13,7 +13,7 @@ class Food:
         self.gift.center_y = randint(0, SCREEN_HEIGHT-10)
 
     def add_food(self):
-        for i in range(0, 5):
+        for i in range(0, 7):
             self.add_to_list()
 
     def add_item(self):

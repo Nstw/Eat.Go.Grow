@@ -33,17 +33,26 @@ class Player:
                 x.center_x = randint(0, self.world.width-1)
                 x.center_y = randint(0, self.world.height-1)
                 self.scale += 0.05
-        '''
-        self.world.check_gift = False
+
         if self.hit(self.world.gift, 10+(10*self.scale)):
             self.Move_Speed += self.Move_Speed*0.1
             self.world.check_gift = True
-        '''
+
+        if self.world.check_gift :
+            self.world.gift.center_x = randint(0,self.world.width-10)
+            self.world.gift.center_y = randint(0,self.world.height-10)            
+            self.world.check_gift = False
+        
     def hit(self, other, hit_size):
         return (abs(self.x-other.center_x)<=hit_size) and (abs(self.y-other.center_y)<=hit_size)
 
     def hit_player(self, other, hit_size):
-        return (abs(self.x-other.x)<=hit_size) and (abs(self.y-other.y)<=hit_size)
+        if not((abs(self.x-other.x)<=hit_size) and (abs(self.y-other.y)<=hit_size)):
+            return
+        if (self.scale > other.scale):
+            self.win = True
+        elif (other.scale > self.scale):
+            other.win = True
 
 class World:
     def __init__(self, width, height):
@@ -67,25 +76,7 @@ class World:
         if not(self.bear.win):
             self.pig.update(delta)
 
-        self.check_gift = False
-        if self.bear.hit(self.gift, 10+(10*self.bear.scale)):
-            self.bear.Move_Speed += self.bear.Move_Speed*0.1
-            self.check_gift = True
-        elif self.pig.hit(self.gift, 10+(10*self.pig.scale)):
-            self.pig.Move_Speed += self.pig.Move_Speed*0.1
-            self.check_gift = True
-       
-        if self.check_gift :
-            self.gift.center_x = randint(0,self.width-10)
-            self.gift.center_y = randint(0,self.height-10)
-            self.check_gift = False
-
-        if self.bear.hit_player(self.pig, 15+(15*self.pig.scale)):
-            if (self.bear.scale > self.pig.scale):
-                self.bear.win = True
-        if self.pig.hit_player(self.bear, 15+(15*self.bear.scale)):
-            if (self.pig.scale > self.bear.scale):
-                self.pig.win = True    
+        self.bear.hit_player(self.pig, 15+(15*self.pig.scale))
 
     def on_key_press(self, key, key_modifiers):
         if (key == arcade.key.UP):            
